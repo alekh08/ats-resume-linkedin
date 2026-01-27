@@ -1,11 +1,14 @@
 export type ExperienceLevel = 'fresher' | '1-3-years' | '3-5-years'
 
+export type ImprovementLevel = 'conservative' | 'moderate' | 'aggressive'
+
 export type AnalysisInput = {
   resumeText: string
   jobDescription: string
   experienceLevel: ExperienceLevel
   targetRole: string
   targetLocation: string
+  improvementLevel: ImprovementLevel
 }
 
 export type ATSScore = {

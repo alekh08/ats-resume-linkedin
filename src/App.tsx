@@ -91,6 +91,13 @@ function App() {
         ) : (
           <ScrollArea className="h-[calc(100vh-200px)]">
             <div className="max-w-5xl mx-auto space-y-8 pb-12">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">
+                    Improvement Level: <span className="font-semibold text-foreground capitalize">{currentInput?.improvementLevel}</span>
+                  </div>
+                </div>
+              </div>
               <ScoreDisplay atsScore={currentResult.atsScore} />
               <ResumeComparisonDisplay 
                 originalResume={currentInput?.resumeText || ''} 

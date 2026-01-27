@@ -6,12 +6,12 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { FileText, Target } from '@phosphor-icons/react'
+import { FileText, Target, SlidersHorizontal } from '@phosphor-icons/react'
 import { FileDropZone } from '@/components/FileDropZone'
 import { FilePreview } from '@/components/FilePreview'
 import { parseResumeFile, validateResumeFile } from '@/lib/fileParser'
 import { toast } from 'sonner'
-import type { AnalysisInput, ExperienceLevel } from '@/lib/types'
+import type { AnalysisInput, ExperienceLevel, ImprovementLevel } from '@/lib/types'
 
 type AnalysisFormProps = {
   onSubmit: (input: AnalysisInput) => void
@@ -24,6 +24,7 @@ export function AnalysisForm({ onSubmit, isAnalyzing }: AnalysisFormProps) {
   const [experienceLevel, setExperienceLevel] = useState<ExperienceLevel>('fresher')
   const [targetRole, setTargetRole] = useState('')
   const [targetLocation, setTargetLocation] = useState('')
+  const [improvementLevel, setImprovementLevel] = useState<ImprovementLevel>('moderate')
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null)
   const [uploadedFileSize, setUploadedFileSize] = useState<number>(0)
   const [isProcessingFile, setIsProcessingFile] = useState(false)
@@ -89,6 +90,7 @@ export function AnalysisForm({ onSubmit, isAnalyzing }: AnalysisFormProps) {
       experienceLevel,
       targetRole: targetRole.trim(),
       targetLocation: targetLocation.trim(),
+      improvementLevel,
     })
   }
 
@@ -208,6 +210,66 @@ export function AnalysisForm({ onSubmit, isAnalyzing }: AnalysisFormProps) {
           />
         </div>
       </div>
+
+      <Card className="p-6 space-y-4 bg-muted/30">
+        <div className="flex items-center gap-3 pb-2">
+          <SlidersHorizontal className="text-primary" size={24} weight="duotone" />
+          <div>
+            <h3 className="font-semibold text-lg">Improvement Level</h3>
+            <p className="text-sm text-muted-foreground">Choose how aggressively to optimize your resume</p>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-3">
+          <button
+            type="button"
+            onClick={() => setImprovementLevel('conservative')}
+            disabled={isAnalyzing}
+            className={`p-4 rounded-lg border-2 transition-all text-left ${
+              improvementLevel === 'conservative'
+                ? 'border-primary bg-primary/5'
+                : 'border-border hover:border-primary/50'
+            }`}
+          >
+            <div className="font-semibold mb-1">Conservative</div>
+            <div className="text-xs text-muted-foreground">
+              Minimal changes, preserve original voice. Best for strong resumes.
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setImprovementLevel('moderate')}
+            disabled={isAnalyzing}
+            className={`p-4 rounded-lg border-2 transition-all text-left ${
+              improvementLevel === 'moderate'
+                ? 'border-primary bg-primary/5'
+                : 'border-border hover:border-primary/50'
+            }`}
+          >
+            <div className="font-semibold mb-1">Moderate</div>
+            <div className="text-xs text-muted-foreground">
+              Balanced improvements with natural keyword integration. Recommended.
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setImprovementLevel('aggressive')}
+            disabled={isAnalyzing}
+            className={`p-4 rounded-lg border-2 transition-all text-left ${
+              improvementLevel === 'aggressive'
+                ? 'border-primary bg-primary/5'
+                : 'border-border hover:border-primary/50'
+            }`}
+          >
+            <div className="font-semibold mb-1">Aggressive</div>
+            <div className="text-xs text-muted-foreground">
+              Maximum ATS optimization with comprehensive rewrites.
+            </div>
+          </button>
+        </div>
+      </Card>
 
       <Button
         type="submit"

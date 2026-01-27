@@ -13,11 +13,18 @@ The app accepts user inputs (resume text, job description, role details), proces
 ## Essential Features
 
 ### Resume Input Form
-- **Functionality**: Multi-field form accepting resume text (via file upload or paste), job description, experience level, target role, and location. Supports PDF, DOC, and DOCX file uploads with automatic text extraction.
-- **Purpose**: Gather necessary context for accurate ATS analysis tailored to Indian market
+- **Functionality**: Multi-field form accepting resume text (via file upload or paste), job description, experience level, target role, location, and improvement level (conservative/moderate/aggressive). Supports PDF, DOC, and DOCX file uploads with automatic text extraction.
+- **Purpose**: Gather necessary context for accurate ATS analysis tailored to Indian market with user-controlled optimization intensity
 - **Trigger**: User lands on app or clicks "New Analysis"
-- **Progression**: Empty form → User uploads file or pastes text → File parsing (if uploaded) → All fields filled → Validation checks → Submit enabled → Analysis starts
-- **Success criteria**: All required fields validated, file parsing completes successfully, smooth transition to analysis view
+- **Progression**: Empty form → User uploads file or pastes text → File parsing (if uploaded) → All fields filled → User selects improvement level → Validation checks → Submit enabled → Analysis starts
+- **Success criteria**: All required fields validated, file parsing completes successfully, improvement level clearly explained, smooth transition to analysis view
+
+### Improvement Level Selection
+- **Functionality**: Three-tier selection (Conservative, Moderate, Aggressive) that controls the intensity of resume optimization. Each level has distinct guidance for the LLM analyzer to adjust keyword density, rewrite aggressiveness, and structural changes.
+- **Purpose**: Give users control over how much their resume is transformed—from minimal polish to maximum ATS optimization
+- **Trigger**: User selects from three options in the form before analysis
+- **Progression**: Default to Moderate → User reads descriptions → Selects preferred level → Level displayed in results → Impacts all analysis outputs
+- **Success criteria**: Clear differentiation between levels, visible in results, consistent application across all sections (score, keywords, rewrites, improved resume)
 
 ### File Upload & Parsing
 - **Functionality**: Drag-and-drop or click-to-browse file upload with support for PDF (.pdf) and Word documents (.doc, .docx). Automatically extracts text content using pdfjs-dist and mammoth libraries.
@@ -132,9 +139,9 @@ Animations should reinforce the sense of progression and analysis happening, cre
 ## Component Selection
 
 - **Components**: 
-  - Form: Textarea (resume/JD), Input (role), Select (experience level, location), File input with drag-and-drop zone
+  - Form: Textarea (resume/JD), Input (role), Select (experience level, location), File input with drag-and-drop zone, Radio-style button group for improvement level
   - Card: For each analysis section with subtle borders and hover states
-  - Badge: For keyword categories, experience level indicators
+  - Badge: For keyword categories, experience level indicators, improvement level badge
   - Separator: Between major sections and between upload/paste options
   - Button: Primary for submit, outline for upload, ghost for secondary actions (copy, new analysis)
   - ScrollArea: For long analysis results to maintain layout
@@ -147,6 +154,7 @@ Animations should reinforce the sense of progression and analysis happening, cre
   - Copy-to-clipboard buttons with success feedback
   - Keyword pills with color-coded categories
   - File upload progress indicator during parsing
+  - Improvement level selector as interactive card-style buttons with hover states
 
 - **States**: 
   - Buttons: Default → Hover (slight bg darken) → Active (scale 0.98) → Disabled (reduced opacity)
@@ -165,6 +173,7 @@ Animations should reinforce the sense of progression and analysis happening, cre
   - LinkedinLogo for LinkedIn section
   - Sparkle for improved/optimized content indicator
   - ArrowRight for before/after comparisons
+  - SlidersHorizontal for improvement level settings
 
 - **Spacing**: 
   - Page padding: px-6 md:px-12 py-8
