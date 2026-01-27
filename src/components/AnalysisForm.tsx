@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { FileText, Target } from '@phosphor-icons/react'
 import { FileDropZone } from '@/components/FileDropZone'
+import { FilePreview } from '@/components/FilePreview'
 import { parseResumeFile, validateResumeFile } from '@/lib/fileParser'
 import { toast } from 'sonner'
 import type { AnalysisInput, ExperienceLevel } from '@/lib/types'
@@ -24,7 +25,10 @@ export function AnalysisForm({ onSubmit, isAnalyzing }: AnalysisFormProps) {
   const [targetRole, setTargetRole] = useState('')
   const [targetLocation, setTargetLocation] = useState('')
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null)
+  const [uploadedFileSize, setUploadedFileSize] = useState<number>(0)
   const [isProcessingFile, setIsProcessingFile] = useState(false)
+  const [previewText, setPreviewText] = useState<string | null>(null)
+  const [currentFile, setCurrentFile] = useState<File | null>(null)
 
   const isValid = resumeText.trim() && jobDescription.trim() && targetRole.trim() && targetLocation.trim()
 
@@ -36,22 +40,43 @@ export function AnalysisForm({ onSubmit, isAnalyzing }: AnalysisFormProps) {
     }
 
     setIsProcessingFile(true)
+    setCurrentFile(file)
     try {
       const text = await parseResumeFile(file)
-      setResumeText(text)
+      setPreviewText(text)
       setUploadedFileName(file.name)
-      toast.success('Resume parsed successfully!')
+      setUploadedFileSize(file.size)
+      toast.success('File parsed successfully!')
     } catch (error) {
       console.error('File parsing error:', error)
       toast.error(error instanceof Error ? error.message : 'Failed to parse file')
+      setCurrentFile(null)
     } finally {
       setIsProcessingFile(false)
     }
   }
 
+  const handleConfirmPreview = () => {
+    if (previewText) {
+      setResumeText(previewText)
+      setPreviewText(null)
+      setCurrentFile(null)
+    }
+  }
+
+  const handleRejectPreview = () => {
+    setPreviewText(null)
+    setCurrentFile(null)
+    setUploadedFileName(null)
+    setUploadedFileSize(0)
+  }
+
   const handleClearFile = () => {
     setResumeText('')
     setUploadedFileName(null)
+    setUploadedFileSize(0)
+    setPreviewText(null)
+    setCurrentFile(null)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -78,31 +103,44 @@ export function AnalysisForm({ onSubmit, isAnalyzing }: AnalysisFormProps) {
           </div>
         </div>
 
-        <FileDropZone
-          onFileSelect={handleFileSelect}
-          disabled={isAnalyzing}
-          isProcessing={isProcessingFile}
-          uploadedFileName={uploadedFileName}
-          onClear={handleClearFile}
-        />
+        {previewText && currentFile ? (
+          <FilePreview
+            fileName={currentFile.name}
+            fileSize={currentFile.size}
+            parsedText={previewText}
+            onConfirm={handleConfirmPreview}
+            onReject={handleRejectPreview}
+            isLoading={isProcessingFile}
+          />
+        ) : (
+          <>
+            <FileDropZone
+              onFileSelect={handleFileSelect}
+              disabled={isAnalyzing}
+              isProcessing={isProcessingFile}
+              uploadedFileName={uploadedFileName}
+              onClear={handleClearFile}
+            />
 
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <Separator />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">Or paste text</span>
-          </div>
-        </div>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <Separator />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">Or paste text</span>
+              </div>
+            </div>
 
-        <Textarea
-          id="resume-text"
-          value={resumeText}
-          onChange={(e) => setResumeText(e.target.value)}
-          placeholder="Paste your resume text here..."
-          className="min-h-[150px] font-mono text-sm"
-          disabled={isAnalyzing || isProcessingFile}
-        />
+            <Textarea
+              id="resume-text"
+              value={resumeText}
+              onChange={(e) => setResumeText(e.target.value)}
+              placeholder="Paste your resume text here..."
+              className="min-h-[150px] font-mono text-sm"
+              disabled={isAnalyzing || isProcessingFile}
+            />
+          </>
+        )}
       </Card>
 
       <Card className="p-6 space-y-4">
