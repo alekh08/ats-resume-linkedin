@@ -1,3 +1,4 @@
+/// <reference path="../vite-end.d.ts" />
 import type { AnalysisInput, AnalysisResult } from './types'
 
 const IMPROVEMENT_LEVEL_GUIDANCE = {
@@ -35,7 +36,7 @@ AGGRESSIVE MODE:
 export async function analyzeResume(input: AnalysisInput): Promise<AnalysisResult> {
   const levelGuidance = IMPROVEMENT_LEVEL_GUIDANCE[input.improvementLevel]
   
-  const prompt = spark.llmPrompt`You are an expert ATS optimization consultant, resume reviewer, and career strategist with deep knowledge of:
+  const prompt = ((window.spark.llmPrompt as unknown) as (strings: TemplateStringsArray, ...values: any[]) => string)`You are an expert ATS optimization consultant, resume reviewer, and career strategist with deep knowledge of:
 - Indian job market hiring practices
 - ATS systems used by Indian and global companies
 - Campus hiring, fresher roles, and lateral roles (0–5 years)
@@ -123,7 +124,7 @@ IMPORTANT RULES:
 - If a section is missing from the resume, note it in the problem field
 - The improvedResume field should be a complete, properly formatted resume text with all improvements applied`
 
-  const response = await spark.llm(prompt, 'gpt-4o', true)
+  const response = await window.spark.llm(prompt, 'gpt-4o', true)
   const result = JSON.parse(response) as AnalysisResult
 
   return result
