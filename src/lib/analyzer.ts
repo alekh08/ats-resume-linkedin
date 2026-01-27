@@ -69,7 +69,8 @@ Provide a comprehensive analysis in the following JSON structure:
     "aboutSection": ["<paragraph 1>", "<paragraph 2>", "<paragraph 3>"],
     "topKeywords": ["keyword1", "keyword2", ... up to 10],
     "networkingTemplate": "<India-appropriate networking message>"
-  }
+  },
+  "improvedResume": "<complete ATS-optimized resume incorporating all improvements, bullet rewrites, and critical keywords. Format professionally with clear sections. Keep all real achievements and dates. Do NOT fabricate information.>"
 }
 
 IMPORTANT RULES:
@@ -80,7 +81,8 @@ IMPORTANT RULES:
 - Keep tone professional and India-appropriate
 - Ensure all keyword analysis is relevant to the job description
 - Rewrite up to 5 bullet points maximum
-- If a section is missing from the resume, note it in the problem field`
+- If a section is missing from the resume, note it in the problem field
+- The improvedResume field should be a complete, properly formatted resume text with all improvements applied`
 
   const response = await spark.llm(prompt, 'gpt-4o', true)
   const result = JSON.parse(response) as AnalysisResult

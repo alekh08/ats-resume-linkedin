@@ -44,6 +44,7 @@ export type AnalysisResult = {
   sectionImprovements: SectionImprovement[]
   bulletRewrites: BulletRewrite[]
   linkedIn: LinkedInOptimization
+  improvedResume: string
 }
 
 export type SavedAnalysis = {

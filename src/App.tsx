@@ -9,6 +9,7 @@ import { KeywordAnalysisDisplay } from '@/components/KeywordAnalysisDisplay'
 import { SectionImprovementsDisplay } from '@/components/SectionImprovementsDisplay'
 import { BulletRewritesDisplay } from '@/components/BulletRewritesDisplay'
 import { LinkedInDisplay } from '@/components/LinkedInDisplay'
+import { ResumeComparisonDisplay } from '@/components/ResumeComparisonDisplay'
 import { analyzeResume } from '@/lib/analyzer'
 import { toast } from 'sonner'
 import { ChartBar, ArrowLeft } from '@phosphor-icons/react'
@@ -91,6 +92,10 @@ function App() {
           <ScrollArea className="h-[calc(100vh-200px)]">
             <div className="max-w-5xl mx-auto space-y-8 pb-12">
               <ScoreDisplay atsScore={currentResult.atsScore} />
+              <ResumeComparisonDisplay 
+                originalResume={currentInput?.resumeText || ''} 
+                improvedResume={currentResult.improvedResume} 
+              />
               <KeywordAnalysisDisplay keywords={currentResult.keywords} />
               <SectionImprovementsDisplay improvements={currentResult.sectionImprovements} />
               {currentResult.bulletRewrites.length > 0 && (

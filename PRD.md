@@ -54,6 +54,13 @@ The app accepts user inputs (resume text, job description, role details), proces
 - **Progression**: Original bullets → LLM rewrite → Side-by-side comparison → Copy functionality
 - **Success criteria**: Up to 5 bullets rewritten in scannable before/after format
 
+### Side-by-Side Resume Comparison
+- **Functionality**: Displays original resume text next to a fully ATS-optimized version incorporating all improvements, keyword additions, and bullet rewrites. Desktop shows true side-by-side view; mobile uses tabbed navigation.
+- **Purpose**: Provide a comprehensive before/after view showing the full transformation, allowing users to see exactly how their resume improves
+- **Trigger**: Displayed prominently after score display, before detailed sections
+- **Progression**: Score revealed → Comparison view loads → Users can scroll both versions → Copy buttons for each version → Navigate to detailed breakdowns
+- **Success criteria**: Both resumes render clearly in scrollable panels, copy functionality works, improved version includes all analysis recommendations without fabricating experience
+
 ### LinkedIn Optimization Guide
 - **Functionality**: Generates optimized LinkedIn headline, about section, top keywords, and networking template
 - **Purpose**: Extend optimization beyond resume to full job search presence
@@ -156,6 +163,8 @@ Animations should reinforce the sense of progression and analysis happening, cre
   - Copy for clipboard actions
   - Check for success states
   - LinkedinLogo for LinkedIn section
+  - Sparkle for improved/optimized content indicator
+  - ArrowRight for before/after comparisons
 
 - **Spacing**: 
   - Page padding: px-6 md:px-12 py-8
