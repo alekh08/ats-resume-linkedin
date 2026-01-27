@@ -13,11 +13,18 @@ The app accepts user inputs (resume text, job description, role details), proces
 ## Essential Features
 
 ### Resume Input Form
-- **Functionality**: Multi-field form accepting resume text, job description, experience level, target role, and location
+- **Functionality**: Multi-field form accepting resume text (via file upload or paste), job description, experience level, target role, and location. Supports PDF, DOC, and DOCX file uploads with automatic text extraction.
 - **Purpose**: Gather necessary context for accurate ATS analysis tailored to Indian market
 - **Trigger**: User lands on app or clicks "New Analysis"
-- **Progression**: Empty form → User fills fields → Validation checks → Submit enabled → Analysis starts
-- **Success criteria**: All required fields validated, smooth transition to analysis view
+- **Progression**: Empty form → User uploads file or pastes text → File parsing (if uploaded) → All fields filled → Validation checks → Submit enabled → Analysis starts
+- **Success criteria**: All required fields validated, file parsing completes successfully, smooth transition to analysis view
+
+### File Upload & Parsing
+- **Functionality**: Drag-and-drop or click-to-browse file upload with support for PDF (.pdf) and Word documents (.doc, .docx). Automatically extracts text content using pdfjs-dist and mammoth libraries.
+- **Purpose**: Make it easier for users to input their resume without manual copy-paste
+- **Trigger**: User drags file to drop zone or clicks upload button
+- **Progression**: File selection → Validation (file type, size) → Parsing → Text extraction → Auto-populate textarea → Success notification
+- **Success criteria**: Files under 10MB parse successfully, extracted text appears in textarea, clear error messages for unsupported formats
 
 ### ATS Score Calculator
 - **Functionality**: Uses LLM to analyze resume against job description and generate 0-100 compatibility score
@@ -64,6 +71,10 @@ The app accepts user inputs (resume text, job description, role details), proces
 ## Edge Case Handling
 
 - **Empty fields**: Disable submit until all required fields are filled, show validation hints
+- **Unsupported file format**: Show error toast with supported formats (PDF, DOC, DOCX)
+- **File too large**: Reject files over 10MB with clear error message
+- **File parsing failure**: Show friendly error, preserve upload option, allow manual paste fallback
+- **Corrupted or encrypted PDF**: Display parsing error with suggestion to save as plain PDF or paste text manually
 - **Very short resume**: Show warning that analysis may be limited, proceed anyway
 - **Very long text**: Truncate intelligently for LLM, inform user of character limits
 - **Identical resume/JD**: Warn about circular analysis, suggest providing actual JD
@@ -114,19 +125,21 @@ Animations should reinforce the sense of progression and analysis happening, cre
 ## Component Selection
 
 - **Components**: 
-  - Form: Textarea (resume/JD), Input (role), Select (experience level, location)
+  - Form: Textarea (resume/JD), Input (role), Select (experience level, location), File input with drag-and-drop zone
   - Card: For each analysis section with subtle borders and hover states
   - Badge: For keyword categories, experience level indicators
-  - Separator: Between major sections for visual breathing room
-  - Button: Primary for submit, ghost for secondary actions (copy, new analysis)
+  - Separator: Between major sections and between upload/paste options
+  - Button: Primary for submit, outline for upload, ghost for secondary actions (copy, new analysis)
   - ScrollArea: For long analysis results to maintain layout
   - Accordion: For collapsible section improvements (optional progressive disclosure)
 
 - **Customizations**: 
+  - FileDropZone component with drag-and-drop, file type validation, and visual feedback
   - Score display as large circular progress indicator (not standard shadcn)
   - Before/After comparison cards with vertical separator
   - Copy-to-clipboard buttons with success feedback
   - Keyword pills with color-coded categories
+  - File upload progress indicator during parsing
 
 - **States**: 
   - Buttons: Default → Hover (slight bg darken) → Active (scale 0.98) → Disabled (reduced opacity)
@@ -134,7 +147,9 @@ Animations should reinforce the sense of progression and analysis happening, cre
   - Cards: Rest → Hover (shadow elevation) → Selected (accent border)
 
 - **Icon Selection**: 
-  - FileText for resume input
+  - FileText for resume input and uploaded file indicator
+  - UploadSimple for file upload action
+  - X for clearing uploaded files
   - Target for job description
   - ChartBar for ATS score
   - Lightbulb for improvements
